@@ -1,5 +1,46 @@
 <?php
 
+// Serve static assets directly if requested
+$uri = urldecode(
+    parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/'
+);
+
+$publicFile = realpath(__DIR__ . '/../public' . $uri);
+$publicRoot = realpath(__DIR__ . '/../public');
+
+if (
+    $uri !== '/' &&
+    $publicFile !== false &&
+    $publicRoot !== false &&
+    str_starts_with($publicFile, $publicRoot) &&
+    file_exists($publicFile) &&
+    !is_dir($publicFile)
+) {
+    $extension = strtolower(pathinfo($publicFile, PATHINFO_EXTENSION));
+    $mimeTypes = [
+        'css'   => 'text/css; charset=utf-8',
+        'js'    => 'application/javascript; charset=utf-8',
+        'svg'   => 'image/svg+xml',
+        'png'   => 'image/png',
+        'jpg'   => 'image/jpeg',
+        'jpeg'  => 'image/jpeg',
+        'gif'   => 'image/gif',
+        'webp'  => 'image/webp',
+        'ico'   => 'image/x-icon',
+        'woff'  => 'font/woff',
+        'woff2' => 'font/woff2',
+        'ttf'   => 'font/ttf',
+        'json'  => 'application/json',
+    ];
+
+    $contentType = $mimeTypes[$extension] ?? (mime_content_type($publicFile) ?: 'application/octet-stream');
+    header('Content-Type: ' . $contentType);
+    header('Cache-Control: public, max-age=31536000, immutable');
+    header('Content-Length: ' . filesize($publicFile));
+    readfile($publicFile);
+    exit;
+}
+
 // Ensure /tmp directories exist for Vercel's ephemeral serverless filesystem
 $dirs = [
     '/tmp/storage',
