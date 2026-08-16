@@ -9,7 +9,83 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#faf8f5',
+                            100: '#f0ece5',
+                            200: '#e0d5c5',
+                            300: '#c9b99a',
+                            400: '#c9a96e',
+                            500: '#b8944e',
+                            600: '#9a7a3e',
+                            700: '#7d6234',
+                            800: '#5e4a28',
+                            900: '#3f321c',
+                        },
+                        surface: '#fafaf8',
+                        'surface-alt': '#f5f3ef',
+                        dark: '#1a1a1a',
+                        'dark-light': '#2d2d2d',
+                        muted: '#6b6b6b',
+                        border: '#e8e5e0',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+            --font-serif: 'Playfair Display', ui-serif, Georgia, serif;
+            --color-brand-50: #faf8f5;
+            --color-brand-100: #f0ece5;
+            --color-brand-200: #e0d5c5;
+            --color-brand-300: #c9b99a;
+            --color-brand-400: #c9a96e;
+            --color-brand-500: #b8944e;
+            --color-brand-600: #9a7a3e;
+            --color-brand-700: #7d6234;
+            --color-brand-800: #5e4a28;
+            --color-brand-900: #3f321c;
+            --color-surface: #fafaf8;
+            --color-surface-alt: #f5f3ef;
+            --color-dark: #1a1a1a;
+            --color-dark-light: #2d2d2d;
+            --color-muted: #6b6b6b;
+            --color-border: #e8e5e0;
+        }
+        .product-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .product-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08); }
+        .product-card .product-image { transition: transform 0.6s ease; }
+        .product-card:hover .product-image { transform: scale(1.05); }
+        .toast { animation: slideDown 0.3s ease-out, fadeOut 0.3s ease-in 3.7s forwards; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+        .badge-success { background-color: #dcfce7; color: #166534; }
+        .badge-warning { background-color: #fef9c3; color: #854d0e; }
+        .badge-danger { background-color: #fee2e2; color: #991b1b; }
+        .badge-info { background-color: #dbeafe; color: #1e40af; }
+        .badge-primary { background-color: #e0e7ff; color: #3730a3; }
+        .badge-secondary { background-color: #f3f4f6; color: #374151; }
+        .size-option { transition: all 0.2s ease; }
+        .size-option:hover:not(.out-of-stock), .size-option.selected { border-color: var(--color-dark); background-color: var(--color-dark); color: white; }
+        .size-option.out-of-stock { opacity: 0.3; cursor: not-allowed; text-decoration: line-through; }
+        .color-swatch { transition: all 0.2s ease; border: 2px solid transparent; }
+        .color-swatch:hover { transform: scale(1.15); }
+        .color-swatch.selected { border-color: var(--color-dark); box-shadow: 0 0 0 2px white, 0 0 0 4px var(--color-dark); }
+        .admin-sidebar-link { transition: all 0.2s ease; }
+        .admin-sidebar-link:hover, .admin-sidebar-link.active { background-color: rgba(201, 169, 110, 0.1); color: var(--color-brand-600); }
+    </style>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body class="min-h-screen flex flex-col bg-[var(--color-surface)]">
     {{-- Toast Notifications --}}
