@@ -1,1 +1,1 @@
-*.sqlite*
+# SQLite database included for demo deployment

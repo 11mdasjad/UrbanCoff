@@ -26,8 +26,11 @@
     ],
     "outputDirectory": "public",
     "env": {
+        "APP_NAME": "Shirt Store",
         "APP_ENV": "production",
-        "APP_DEBUG": "false",
+        "APP_KEY": "base64:PZgWb0XfFxehzln4v4HL2ZvT5VEXkbVhAfaG38Xhz5E=",
+        "APP_DEBUG": "true",
+        "APP_URL": "https://jacario.vercel.app",
         "APP_CONFIG_CACHE": "/tmp/config.php",
         "APP_EVENTS_CACHE": "/tmp/events.php",
         "APP_PACKAGES_CACHE": "/tmp/packages.php",
@@ -35,7 +38,12 @@
         "APP_SERVICES_CACHE": "/tmp/services.php",
         "VIEW_COMPILED_PATH": "/tmp/views",
         "CACHE_STORE": "array",
-        "SESSION_DRIVER": "cookie",
-        "LOG_CHANNEL": "stderr"
+        "SESSION_DRIVER": "array",
+        "QUEUE_CONNECTION": "sync",
+        "LOG_CHANNEL": "stderr",
+        "DB_CONNECTION": "sqlite",
+        "DB_DATABASE": "/tmp/database.sqlite",
+        "FILESYSTEM_DISK": "local",
+        "BROADCAST_CONNECTION": "log"
     }
 }
