@@ -13,6 +13,14 @@ rm -rf /etc/nginx/http.d/* /etc/nginx/conf.d/*
 # Replace ${PORT} placeholder in main Nginx config
 envsubst '${PORT}' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf
 
+# Validate Nginx configuration syntax before starting any services
+echo "==> Validating Nginx configuration syntax with 'nginx -t'..."
+if ! nginx -t; then
+    echo "FATAL: Nginx configuration test failed! Check syntax in /etc/nginx/nginx.conf"
+    exit 1
+fi
+echo "==> Nginx configuration syntax: OK"
+
 # Ensure directory permissions for storage and bootstrap/cache
 echo "==> Fixing storage and cache permissions..."
 mkdir -p /var/www/html/storage/framework/sessions \
