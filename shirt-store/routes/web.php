@@ -69,3 +69,58 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/customers', [AdminCustomerController::class, 'index'])->name('customers.index');
     Route::get('/customers/{user}', [AdminCustomerController::class, 'show'])->name('customers.show');
 });
+
+// ── Production Health Check (DB + Cache Diagnostic) ─────────
+Route::get('/health', function () {
+    $status = 'ok';
+    $httpCode = 200;
+    $checks = [];
+
+    // 1. Database Connectivity Check
+    try {
+        \Illuminate\Support\Facades\DB::connection()->getPdo();
+        $checks['database'] = [
+            'status' => 'healthy',
+            'driver' => config('database.default'),
+        ];
+    } catch (\Throwable $e) {
+        $status = 'unhealthy';
+        $httpCode = 503;
+        $checks['database'] = [
+            'status' => 'unhealthy',
+            'error'  => $e->getMessage(),
+        ];
+    }
+
+    // 2. Cache Read/Write Check
+    try {
+        $key = 'health_check_' . time();
+        \Illuminate\Support\Facades\Cache::put($key, 'ok', 5);
+        $val = \Illuminate\Support\Facades\Cache::get($key);
+        \Illuminate\Support\Facades\Cache::forget($key);
+
+        if ($val === 'ok') {
+            $checks['cache'] = [
+                'status' => 'healthy',
+                'driver' => config('cache.default'),
+            ];
+        } else {
+            throw new \Exception('Cache read/write verification failed');
+        }
+    } catch (\Throwable $e) {
+        $status = 'unhealthy';
+        $httpCode = 503;
+        $checks['cache'] = [
+            'status' => 'unhealthy',
+            'error'  => $e->getMessage(),
+        ];
+    }
+
+    return response()->json([
+        'status'    => $status,
+        'app'       => config('app.name'),
+        'timestamp' => now()->toIso8601String(),
+        'checks'    => $checks,
+    ], $httpCode);
+})->name('health');
+

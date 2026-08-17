@@ -1,0 +1,108 @@
+services:
+  # ── 1. Web Application Service (Nginx + PHP-FPM) ───────────
+  - type: web
+    name: urbancoff-web
+    env: docker
+    plan: free
+    region: oregon
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    envVars:
+      - key: APP_NAME
+        value: URBANCOFF
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_KEY
+        generateValue: true
+      - key: APP_TIMEZONE
+        value: Asia/Kolkata
+      - key: DB_CONNECTION
+        value: sqlite
+      - key: DB_DATABASE
+        value: /var/www/html/database/database.sqlite
+      - key: SESSION_DRIVER
+        value: cookie
+      - key: CACHE_STORE
+        value: array
+      - key: QUEUE_CONNECTION
+        value: database
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: LOG_LEVEL
+        value: error
+      - key: FILESYSTEM_DISK
+        value: local
+
+  # ── 2. Background Queue Worker Service ────────────────────
+  - type: worker
+    name: urbancoff-worker
+    env: docker
+    plan: starter
+    region: oregon
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    dockerCommand: php artisan queue:work --tries=3 --timeout=90 --sleep=3 --max-time=3600 --max-jobs=1000
+    envVars:
+      - fromService:
+          type: web
+          name: urbancoff-web
+          envVarKey: APP_KEY
+      - fromService:
+          type: web
+          name: urbancoff-web
+          envVarKey: DB_CONNECTION
+      - fromService:
+          type: web
+          name: urbancoff-web
+          envVarKey: DB_HOST
+      - fromService:
+          type: web
+          name: urbancoff-web
+          envVarKey: DB_DATABASE
+      - fromService:
+          type: web
+          name: urbancoff-web
+          envVarKey: DB_USERNAME
+      - fromService:
+          type: web
+          name: urbancoff-web
+          envVarKey: DB_PASSWORD
+
+  # ── 3. Cron Scheduler Job (Every minute) ───────────────────
+  - type: cron
+    name: urbancoff-scheduler
+    env: docker
+    plan: starter
+    region: oregon
+    schedule: "* * * * *"
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    dockerCommand: php artisan schedule:run
+    envVars:
+      - fromService:
+          type: web
+          name: urbancoff-web
+          envVarKey: APP_KEY
+      - fromService:
+          type: web
+          name: urbancoff-web
+          envVarKey: DB_CONNECTION
+      - fromService:
+          type: web
+          name: urbancoff-web
+          envVarKey: DB_HOST
+      - fromService:
+          type: web
+          name: urbancoff-web
+          envVarKey: DB_DATABASE
+      - fromService:
+          type: web
+          name: urbancoff-web
+          envVarKey: DB_USERNAME
+      - fromService:
+          type: web
+          name: urbancoff-web
+          envVarKey: DB_PASSWORD
