@@ -14,10 +14,16 @@ COPY public/ ./public/
 RUN npm run build
 
 # ==============================================================================
-# Stage 2: Composer Dependencies (Production only)
+# Stage 2: Composer Dependencies (PHP 8.4 Production only)
 # ==============================================================================
-FROM composer:2 AS composer-builder
+FROM php:8.4-cli-alpine AS composer-builder
 WORKDIR /app
+
+# Copy Composer 2 binary
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+# Install essential tools for composer
+RUN apk add --no-cache git unzip libzip-dev
 
 COPY composer.json composer.lock ./
 RUN composer install \
@@ -31,12 +37,12 @@ COPY . .
 RUN composer dump-autoload --optimize --no-dev
 
 # ==============================================================================
-# Stage 3: Production Runtime
+# Stage 3: Production Runtime (PHP 8.4 FPM Alpine)
 # ==============================================================================
-FROM php:8.3-fpm-alpine AS production
+FROM php:8.4-fpm-alpine AS production
 
 LABEL maintainer="URBANCOFF DevOps <devops@urbancoff.com>"
-LABEL description="Production Docker image for URBANCOFF Laravel eCommerce Application"
+LABEL description="Production Docker image for URBANCOFF Laravel eCommerce Application on PHP 8.4"
 
 WORKDIR /var/www/html
 
@@ -55,7 +61,7 @@ RUN apk add --no-cache \
     icu-dev \
     oniguruma-dev
 
-# Install required PHP extensions
+# Install required PHP 8.4 extensions
 ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 RUN chmod +x /usr/local/bin/install-php-extensions && \
     install-php-extensions \
@@ -65,6 +71,7 @@ RUN chmod +x /usr/local/bin/install-php-extensions && \
         pdo_pgsql \
         bcmath \
         ctype \
+        exif \
         fileinfo \
         gd \
         intl \
