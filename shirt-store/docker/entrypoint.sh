@@ -7,8 +7,11 @@ echo "==> Starting URBANCOFF Laravel Service on Render..."
 export PORT=${PORT:-80}
 echo "==> Configuring Nginx to listen on port: $PORT"
 
-# Replace ${PORT} placeholder in Nginx config
-envsubst '${PORT}' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf
+# Clean default Alpine Nginx includes to prevent conflicting server directives
+rm -rf /etc/nginx/http.d/* /etc/nginx/conf.d/*
+
+# Replace ${PORT} placeholder in main Nginx config
+envsubst '${PORT}' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf
 
 # Ensure directory permissions for storage and bootstrap/cache
 echo "==> Fixing storage and cache permissions..."

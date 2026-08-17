@@ -76,7 +76,7 @@ RUN chmod +x /usr/local/bin/install-php-extensions && \
 
 # Copy PHP and Nginx configuration
 COPY docker/php.ini /usr/local/etc/php/conf.d/custom.ini
-COPY docker/nginx.conf /etc/nginx/conf.d/default.conf.template
+COPY docker/nginx.conf /etc/nginx/nginx.conf.template
 COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
