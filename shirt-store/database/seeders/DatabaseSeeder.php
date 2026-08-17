@@ -18,17 +18,17 @@ class DatabaseSeeder extends Seeder
         // Create admin user
         User::factory()->create([
             'name' => 'Admin User',
-            'email' => 'admin@shirtstore.com',
+            'email' => 'admin@urbancoff.com',
             'role' => 'admin',
-            'phone' => '+1234567890',
+            'phone' => '+91 98765 43210',
         ]);
 
         // Create test customer
         User::factory()->create([
-            'name' => 'John Customer',
-            'email' => 'customer@shirtstore.com',
+            'name' => 'Rahul Sharma',
+            'email' => 'customer@urbancoff.com',
             'role' => 'customer',
-            'phone' => '+0987654321',
+            'phone' => '+91 98765 12345',
         ]);
 
         // Create additional customers

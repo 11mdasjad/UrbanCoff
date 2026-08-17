@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Checkout — Shirt Store')
+@section('title', 'Checkout — URBANCOFF')
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
@@ -106,20 +106,20 @@
                         <div class="flex-1 min-w-0">
                             <p class="text-sm font-medium text-[var(--color-dark)] truncate">{{ $item->product->name }}</p>
                             <p class="text-xs text-[var(--color-muted)]">{{ $item->variant->size }} / {{ $item->variant->color }} × {{ $item->quantity }}</p>
-                            <p class="text-sm font-bold text-[var(--color-dark)] mt-1">${{ number_format($item->subtotal, 2) }}</p>
+                            <p class="text-sm font-bold text-[var(--color-dark)] mt-1">₹{{ number_format($item->subtotal, 2) }}</p>
                         </div>
                     </div>
                     @endforeach
                 </div>
                 <div class="border-t border-[var(--color-border)] pt-4 space-y-2 text-sm">
-                    <div class="flex justify-between"><span class="text-[var(--color-muted)]">Subtotal</span><span>${{ number_format($cartData['subtotal'], 2) }}</span></div>
-                    <div class="flex justify-between"><span class="text-[var(--color-muted)]">Shipping</span><span>{{ $cartData['free_shipping'] ? 'Free' : '$' . number_format($cartData['shipping'], 2) }}</span></div>
+                    <div class="flex justify-between"><span class="text-[var(--color-muted)]">Subtotal</span><span>₹{{ number_format($cartData['subtotal'], 2) }}</span></div>
+                    <div class="flex justify-between"><span class="text-[var(--color-muted)]">Shipping</span><span>{{ $cartData['free_shipping'] ? 'Free' : '₹' . number_format($cartData['shipping'], 2) }}</span></div>
                     <div class="border-t border-[var(--color-border)] pt-2 flex justify-between font-bold text-lg">
-                        <span>Total</span><span>${{ number_format($cartData['total'], 2) }}</span>
+                        <span>Total</span><span>₹{{ number_format($cartData['total'], 2) }}</span>
                     </div>
                 </div>
                 <button type="submit" class="w-full mt-6 py-3.5 bg-[var(--color-brand-500)] text-white text-sm font-semibold rounded-lg hover:bg-[var(--color-brand-600)] transition-colors">
-                    Place Order — ${{ number_format($cartData['total'], 2) }}
+                    Place Order — ₹{{ number_format($cartData['total'], 2) }}
                 </button>
             </div>
         </div>

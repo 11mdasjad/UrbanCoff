@@ -14,11 +14,11 @@
         }
     ],
     "env": {
-        "APP_NAME": "Shirt Store",
+        "APP_NAME": "URBANCOFF",
         "APP_ENV": "production",
         "APP_KEY": "base64:PZgWb0XfFxehzln4v4HL2ZvT5VEXkbVhAfaG38Xhz5E=",
         "APP_DEBUG": "false",
-        "APP_URL": "https://jacario.vercel.app",
+        "APP_URL": "https://urbancoff.vercel.app",
         "APP_CONFIG_CACHE": "/tmp/config.php",
         "APP_EVENTS_CACHE": "/tmp/events.php",
         "APP_PACKAGES_CACHE": "/tmp/packages.php",

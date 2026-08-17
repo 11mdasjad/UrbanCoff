@@ -1,25 +1,25 @@
 {{-- Product Card Component --}}
-<div class="product-card bg-white rounded-xl overflow-hidden border border-[var(--color-border)]">
-    <a href="{{ route('products.show', $product->slug) }}" class="block relative overflow-hidden aspect-[3/4] bg-[var(--color-surface-alt)]">
-        <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="product-image w-full h-full object-cover" loading="lazy">
+<a href="{{ route('products.show', $product->slug) }}" class="product-card group block bg-white rounded-xl overflow-hidden border border-[var(--color-border)] hover:border-[var(--color-brand-400)] transition-all cursor-pointer">
+    <div class="relative overflow-hidden aspect-[3/4] bg-[var(--color-surface-alt)]">
+        <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="product-image w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
         @if($product->is_on_sale)
-            <span class="absolute top-3 left-3 bg-red-500 text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full">-{{ $product->discount_percent }}%</span>
+            <span class="absolute top-3 left-3 bg-red-500 text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full shadow-sm">-{{ $product->discount_percent }}%</span>
         @endif
         @if($product->featured)
-            <span class="absolute top-3 right-3 bg-[var(--color-brand-500)] text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full">Featured</span>
+            <span class="absolute top-3 right-3 bg-[var(--color-brand-500)] text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full shadow-sm">Featured</span>
         @endif
-    </a>
+    </div>
     <div class="p-4">
         <p class="text-[10px] font-semibold uppercase tracking-wider text-[var(--color-brand-500)] mb-1">{{ $product->category->name ?? '' }}</p>
-        <h3 class="font-sans text-sm font-medium text-[var(--color-dark)] mb-2 line-clamp-2">
-            <a href="{{ route('products.show', $product->slug) }}" class="hover:text-[var(--color-brand-500)] transition-colors">{{ $product->name }}</a>
+        <h3 class="font-sans text-sm font-medium text-[var(--color-dark)] group-hover:text-[var(--color-brand-600)] transition-colors mb-2 line-clamp-2">
+            {{ $product->name }}
         </h3>
         <div class="flex items-center gap-2 mb-3">
             @if($product->is_on_sale)
-                <span class="text-base font-bold text-[var(--color-dark)]">${{ number_format($product->sale_price, 2) }}</span>
-                <span class="text-sm text-[var(--color-muted)] line-through">${{ number_format($product->price, 2) }}</span>
+                <span class="text-base font-bold text-[var(--color-dark)]">₹{{ number_format($product->sale_price, 2) }}</span>
+                <span class="text-sm text-[var(--color-muted)] line-through">₹{{ number_format($product->price, 2) }}</span>
             @else
-                <span class="text-base font-bold text-[var(--color-dark)]">${{ number_format($product->price, 2) }}</span>
+                <span class="text-base font-bold text-[var(--color-dark)]">₹{{ number_format($product->price, 2) }}</span>
             @endif
         </div>
         {{-- Available Colors --}}
@@ -44,4 +44,4 @@
         </div>
         @endif
     </div>
-</div>
+</a>

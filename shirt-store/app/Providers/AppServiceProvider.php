@@ -25,13 +25,28 @@ class AppServiceProvider extends ServiceProvider
             \Illuminate\Support\Facades\URL::forceScheme('https');
         }
 
-        // Share cart count with all views
+        // Share cart data with all views
         View::composer('*', function ($view) {
             try {
                 $cartService = app(CartService::class);
-                $view->with('cartCount', $cartService->count());
+                $totals = $cartService->getTotals();
+                $view->with([
+                    'cartCount' => $totals['count'],
+                    'cartDrawerItems' => $totals['items'],
+                    'cartDrawerSubtotal' => $totals['subtotal'],
+                    'cartDrawerShipping' => $totals['shipping'],
+                    'cartDrawerTotal' => $totals['total'],
+                    'cartDrawerFreeShipping' => $totals['free_shipping'],
+                ]);
             } catch (\Exception $e) {
-                $view->with('cartCount', 0);
+                $view->with([
+                    'cartCount' => 0,
+                    'cartDrawerItems' => collect(),
+                    'cartDrawerSubtotal' => 0,
+                    'cartDrawerShipping' => 0,
+                    'cartDrawerTotal' => 0,
+                    'cartDrawerFreeShipping' => false,
+                ]);
             }
         });
     }

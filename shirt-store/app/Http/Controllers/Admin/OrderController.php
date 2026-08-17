@@ -35,6 +35,16 @@ class OrderController extends Controller
         return view('admin.orders.show', compact('order'));
     }
 
+    public function invoice(Order $order)
+    {
+        $order->load(['items.product', 'user']);
+
+        return view('orders.invoice', [
+            'order' => $order,
+            'isAdmin' => true,
+        ]);
+    }
+
     public function updateStatus(Request $request, Order $order)
     {
         $request->validate([

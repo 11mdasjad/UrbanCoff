@@ -34,6 +34,6 @@ class RegisterController extends Controller
             ->whereNull('user_id')
             ->update(['user_id' => $user->id, 'session_id' => null]);
 
-        return redirect()->route('home')->with('success', 'Welcome to Shirt Store! Your account has been created.');
+        return redirect()->intended(route('home'))->with('success', 'Welcome to URBANCOFF! Your account has been created.');
     }
 }

@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Order ' . $order->order_number . ' — Shirt Store')
+@section('title', 'Order ' . $order->order_number . ' — URBANCOFF')
 
 @section('content')
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
@@ -35,8 +35,8 @@
                         <p class="text-xs text-[var(--color-muted)] mt-1">Size: {{ $item->size }} · Color: {{ $item->color }} · Qty: {{ $item->quantity }}</p>
                     </div>
                     <div class="text-right">
-                        <p class="text-sm font-bold text-[var(--color-dark)]">${{ number_format($item->total, 2) }}</p>
-                        <p class="text-xs text-[var(--color-muted)]">${{ number_format($item->price, 2) }} each</p>
+                        <p class="text-sm font-bold text-[var(--color-dark)]">₹{{ number_format($item->total, 2) }}</p>
+                        <p class="text-xs text-[var(--color-muted)]">₹{{ number_format($item->price, 2) }} each</p>
                     </div>
                 </div>
                 @endforeach
@@ -48,9 +48,9 @@
             <div class="bg-white rounded-xl border border-[var(--color-border)] p-4">
                 <h3 class="font-sans font-semibold text-[var(--color-dark)] mb-3">Summary</h3>
                 <div class="space-y-2 text-sm">
-                    <div class="flex justify-between"><span class="text-[var(--color-muted)]">Subtotal</span><span>${{ number_format($order->subtotal, 2) }}</span></div>
-                    <div class="flex justify-between"><span class="text-[var(--color-muted)]">Shipping</span><span>{{ $order->shipping_cost > 0 ? '$' . number_format($order->shipping_cost, 2) : 'Free' }}</span></div>
-                    <div class="border-t pt-2 flex justify-between font-bold"><span>Total</span><span class="text-lg">${{ number_format($order->total, 2) }}</span></div>
+                    <div class="flex justify-between"><span class="text-[var(--color-muted)]">Subtotal</span><span>₹{{ number_format($order->subtotal, 2) }}</span></div>
+                    <div class="flex justify-between"><span class="text-[var(--color-muted)]">Shipping</span><span>{{ $order->shipping_cost > 0 ? '₹' . number_format($order->shipping_cost, 2) : 'Free' }}</span></div>
+                    <div class="border-t pt-2 flex justify-between font-bold"><span>Total</span><span class="text-lg">₹{{ number_format($order->total, 2) }}</span></div>
                 </div>
                 <div class="mt-3 pt-3 border-t text-sm">
                     <p class="text-[var(--color-muted)]">Payment: <span class="font-medium text-[var(--color-dark)]">Cash on Delivery</span></p>

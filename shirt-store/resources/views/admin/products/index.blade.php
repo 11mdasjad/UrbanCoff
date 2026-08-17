@@ -50,10 +50,10 @@
                         <td class="px-4 py-3 text-[var(--color-muted)]">{{ $product->category->name }}</td>
                         <td class="px-4 py-3">
                             @if($product->is_on_sale)
-                                <span class="font-medium">${{ number_format($product->sale_price, 2) }}</span>
-                                <span class="text-xs text-[var(--color-muted)] line-through ml-1">${{ number_format($product->price, 2) }}</span>
+                                <span class="font-medium">₹{{ number_format($product->sale_price, 2) }}</span>
+                                <span class="text-xs text-[var(--color-muted)] line-through ml-1">₹{{ number_format($product->price, 2) }}</span>
                             @else
-                                <span class="font-medium">${{ number_format($product->price, 2) }}</span>
+                                <span class="font-medium">₹{{ number_format($product->price, 2) }}</span>
                             @endif
                         </td>
                         <td class="px-4 py-3">

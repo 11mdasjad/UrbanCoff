@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'My Orders — Shirt Store')
+@section('title', 'My Orders — URBANCOFF')
 
 @section('content')
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
@@ -8,19 +8,23 @@
     @if($orders->count())
     <div class="space-y-4">
         @foreach($orders as $order)
-        <a href="{{ route('orders.show', $order) }}" class="block bg-white rounded-xl border border-[var(--color-border)] p-6 hover:border-[var(--color-brand-400)] transition-colors">
+        <div class="bg-white rounded-xl border border-[var(--color-border)] p-6 hover:border-[var(--color-brand-400)] transition-colors">
             <div class="flex flex-wrap items-center justify-between gap-4 mb-3">
                 <div>
-                    <span class="text-sm font-bold text-[var(--color-dark)]">{{ $order->order_number }}</span>
+                    <a href="{{ route('orders.show', $order) }}" class="text-sm font-bold text-[var(--color-dark)] hover:text-[var(--color-brand-600)] transition-colors">{{ $order->order_number }}</a>
                     <span class="text-xs text-[var(--color-muted)] ml-3">{{ $order->created_at->format('M d, Y') }}</span>
                 </div>
-                <span class="badge-{{ $order->status_badge }} text-xs font-semibold px-3 py-1 rounded-full">{{ $order->status_label }}</span>
+                <div class="flex items-center gap-2">
+                    <span class="badge-{{ $order->status_badge }} text-xs font-semibold px-3 py-1 rounded-full">{{ $order->status_label }}</span>
+                </div>
             </div>
-            <div class="flex items-center justify-between">
-                <span class="text-sm text-[var(--color-muted)]">{{ $order->items->count() }} {{ Str::plural('item', $order->items->count()) }}</span>
-                <span class="text-lg font-bold text-[var(--color-dark)]">${{ number_format($order->total, 2) }}</span>
+            <div class="flex items-center justify-between pt-2 border-t border-gray-100">
+                <span class="text-sm text-[var(--color-muted)]">{{ $order->items->count() }} {{ Str::plural('item', $order->items->count()) }} · <strong class="text-[var(--color-dark)]">₹{{ number_format($order->total, 2) }}</strong></span>
+                <a href="{{ route('orders.show', $order) }}" class="text-xs font-semibold text-[var(--color-dark)] hover:underline">
+                    View Details →
+                </a>
             </div>
-        </a>
+        </div>
         @endforeach
     </div>
     <div class="mt-8">{{ $orders->links() }}</div>

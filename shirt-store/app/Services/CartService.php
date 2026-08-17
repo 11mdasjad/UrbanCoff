@@ -112,7 +112,7 @@ class CartService
     {
         $items = $this->getItems();
         $subtotal = $items->sum(fn ($item) => $item->quantity * $item->product->effective_price);
-        $shipping = $subtotal > 0 ? ($subtotal >= 100 ? 0 : 9.99) : 0;
+        $shipping = $subtotal > 0 ? ($subtotal >= 999 ? 0 : 99.00) : 0;
         $total = $subtotal + $shipping;
 
         return [
@@ -121,7 +121,7 @@ class CartService
             'subtotal' => round($subtotal, 2),
             'shipping' => round($shipping, 2),
             'total' => round($total, 2),
-            'free_shipping' => $subtotal >= 100,
+            'free_shipping' => $subtotal >= 999,
         ];
     }
 

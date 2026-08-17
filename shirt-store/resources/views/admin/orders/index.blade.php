@@ -35,10 +35,15 @@
                             <p class="text-[var(--color-dark)]">{{ $order->name }}</p>
                             <p class="text-xs text-[var(--color-muted)]">{{ $order->email }}</p>
                         </td>
-                        <td class="px-4 py-3 font-bold">${{ number_format($order->total, 2) }}</td>
+                        <td class="px-4 py-3 font-bold">₹{{ number_format($order->total, 2) }}</td>
                         <td class="px-4 py-3"><span class="badge-{{ $order->status_badge }} text-xs font-semibold px-2.5 py-1 rounded-full">{{ $order->status_label }}</span></td>
                         <td class="px-4 py-3 text-[var(--color-muted)]">{{ $order->created_at->format('M d, Y') }}</td>
-                        <td class="px-4 py-3"><a href="{{ route('admin.orders.show', $order) }}" class="text-[var(--color-brand-500)] text-xs font-medium hover:underline">View</a></td>
+                        <td class="px-4 py-3">
+                            <div class="flex items-center gap-3">
+                                <a href="{{ route('admin.orders.show', $order) }}" class="text-[var(--color-dark)] text-xs font-semibold hover:underline">View</a>
+                                <a href="{{ route('admin.orders.invoice', $order) }}" target="_blank" class="text-[var(--color-brand-600)] text-xs font-medium hover:underline">Invoice</a>
+                            </div>
+                        </td>
                     </tr>
                     @empty
                     <tr><td colspan="6" class="px-4 py-12 text-center text-[var(--color-muted)]">No orders found.</td></tr>

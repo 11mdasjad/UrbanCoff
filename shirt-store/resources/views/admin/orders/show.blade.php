@@ -11,16 +11,22 @@
             <h2 class="text-xl font-serif font-bold text-[var(--color-dark)]">{{ $order->order_number }}</h2>
             <p class="text-sm text-[var(--color-muted)]">{{ $order->created_at->format('F d, Y \a\t g:i A') }}</p>
         </div>
-        {{-- Status Update --}}
-        <form action="{{ route('admin.orders.status', $order) }}" method="POST" class="flex items-center gap-2">
-            @csrf @method('PATCH')
-            <select name="status" class="px-3 py-2 border border-[var(--color-border)] rounded-lg text-sm bg-white">
-                @foreach(\App\Models\Order::STATUSES as $status)
-                    <option value="{{ $status }}" {{ $order->status === $status ? 'selected' : '' }}>{{ ucfirst($status) }}</option>
-                @endforeach
-            </select>
-            <button type="submit" class="px-4 py-2 bg-[var(--color-dark)] text-white text-sm font-medium rounded-lg hover:bg-[var(--color-dark-light)]">Update</button>
-        </form>
+        <div class="flex items-center gap-3">
+            <a href="{{ route('admin.orders.invoice', $order) }}" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-white border border-[var(--color-border)] text-[var(--color-dark)] hover:border-[var(--color-dark)] text-sm font-medium rounded-lg shadow-sm transition-colors">
+                <svg class="w-4 h-4 text-[var(--color-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                Print / View Invoice
+            </a>
+            {{-- Status Update --}}
+            <form action="{{ route('admin.orders.status', $order) }}" method="POST" class="flex items-center gap-2">
+                @csrf @method('PATCH')
+                <select name="status" class="px-3 py-2 border border-[var(--color-border)] rounded-lg text-sm bg-white">
+                    @foreach(\App\Models\Order::STATUSES as $status)
+                        <option value="{{ $status }}" {{ $order->status === $status ? 'selected' : '' }}>{{ ucfirst($status) }}</option>
+                    @endforeach
+                </select>
+                <button type="submit" class="px-4 py-2 bg-[var(--color-dark)] text-white text-sm font-medium rounded-lg hover:bg-[var(--color-dark-light)]">Update</button>
+            </form>
+        </div>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -35,7 +41,7 @@
                         <p class="text-sm font-medium">{{ $item->product_name }}</p>
                         <p class="text-xs text-[var(--color-muted)]">{{ $item->size }} / {{ $item->color }} × {{ $item->quantity }}</p>
                     </div>
-                    <p class="text-sm font-bold">${{ number_format($item->total, 2) }}</p>
+                    <p class="text-sm font-bold">₹{{ number_format($item->total, 2) }}</p>
                 </div>
                 @endforeach
             </div>
@@ -45,9 +51,9 @@
             {{-- Summary --}}
             <div class="bg-white rounded-xl border border-[var(--color-border)] p-4 space-y-2 text-sm">
                 <h3 class="font-semibold mb-2">Summary</h3>
-                <div class="flex justify-between"><span class="text-[var(--color-muted)]">Subtotal</span><span>${{ number_format($order->subtotal, 2) }}</span></div>
-                <div class="flex justify-between"><span class="text-[var(--color-muted)]">Shipping</span><span>{{ $order->shipping_cost > 0 ? '$'.number_format($order->shipping_cost,2) : 'Free' }}</span></div>
-                <div class="border-t pt-2 flex justify-between font-bold"><span>Total</span><span class="text-lg">${{ number_format($order->total, 2) }}</span></div>
+                <div class="flex justify-between"><span class="text-[var(--color-muted)]">Subtotal</span><span>₹{{ number_format($order->subtotal, 2) }}</span></div>
+                <div class="flex justify-between"><span class="text-[var(--color-muted)]">Shipping</span><span>{{ $order->shipping_cost > 0 ? '₹'.number_format($order->shipping_cost,2) : 'Free' }}</span></div>
+                <div class="border-t pt-2 flex justify-between font-bold"><span>Total</span><span class="text-lg">₹{{ number_format($order->total, 2) }}</span></div>
                 <p class="text-[var(--color-muted)] pt-1">Payment: {{ ucfirst($order->payment_method) === 'Cod' ? 'Cash on Delivery' : ucfirst($order->payment_method) }}</p>
             </div>
 

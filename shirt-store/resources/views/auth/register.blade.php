@@ -1,13 +1,13 @@
 @extends('layouts.app')
-@section('title', 'Register — Shirt Store')
+@section('title', 'Register — URBANCOFF')
 
 @section('content')
 <div class="min-h-[80vh] flex items-center justify-center py-12 px-4">
     <div class="w-full max-w-md">
         <div class="text-center mb-8">
-            <a href="{{ route('home') }}" class="inline-flex items-center gap-2">
-                <span class="font-serif text-2xl font-bold text-[var(--color-dark)]">SHIRT</span>
-                <span class="font-serif text-2xl font-light text-[var(--color-brand-500)]">STORE</span>
+            <a href="{{ route('home') }}" class="inline-flex items-center gap-3">
+                <img src="{{ asset('images/urbancoff-logo.png') }}" alt="URBANCOFF" class="h-10 w-10 object-contain rounded-lg">
+                <span class="font-sans text-2xl font-extrabold tracking-tight text-[var(--color-dark)]">URBANCOFF</span>
             </a>
             <h1 class="font-serif text-2xl font-bold text-[var(--color-dark)] mt-6">Create Account</h1>
             <p class="text-sm text-[var(--color-muted)] mt-2">Join us for the best shirt shopping experience</p>

@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 @section('page_title', 'Dashboard')
-@section('title', 'Admin Dashboard — Shirt Store')
+@section('title', 'Admin Dashboard — URBANCOFF')
 
 @section('content')
 <div class="space-y-8">
@@ -8,7 +8,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
         <div class="bg-white rounded-xl border border-[var(--color-border)] p-5">
             <p class="text-xs font-semibold uppercase tracking-wider text-[var(--color-muted)] mb-1">Revenue</p>
-            <p class="text-2xl font-bold text-[var(--color-dark)]">${{ number_format($stats['total_revenue'], 2) }}</p>
+            <p class="text-2xl font-bold text-[var(--color-dark)]">₹{{ number_format($stats['total_revenue'], 2) }}</p>
         </div>
         <div class="bg-white rounded-xl border border-[var(--color-border)] p-5">
             <p class="text-xs font-semibold uppercase tracking-wider text-[var(--color-muted)] mb-1">Orders</p>
@@ -46,7 +46,7 @@
                     <p class="text-xs text-[var(--color-muted)]">{{ $order->user?->name ?? $order->name }} · {{ $order->created_at->diffForHumans() }}</p>
                 </div>
                 <div class="text-right">
-                    <p class="text-sm font-bold text-[var(--color-dark)]">${{ number_format($order->total, 2) }}</p>
+                    <p class="text-sm font-bold text-[var(--color-dark)]">₹{{ number_format($order->total, 2) }}</p>
                     <span class="badge-{{ $order->status_badge }} text-[10px] font-semibold px-2 py-0.5 rounded-full">{{ $order->status_label }}</span>
                 </div>
             </a>

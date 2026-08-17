@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', $product->name . ' — Shirt Store')
+@section('title', $product->name . ' — URBANCOFF')
 @section('meta_description', $product->short_description ?? Str::limit($product->description, 160))
 
 @section('content')
@@ -43,11 +43,11 @@
             {{-- Price --}}
             <div class="flex items-center gap-3 mb-6">
                 @if($product->is_on_sale)
-                    <span class="text-2xl font-bold text-[var(--color-dark)]">${{ number_format($product->sale_price, 2) }}</span>
-                    <span class="text-lg text-[var(--color-muted)] line-through">${{ number_format($product->price, 2) }}</span>
+                    <span class="text-2xl font-bold text-[var(--color-dark)]">₹{{ number_format($product->sale_price, 2) }}</span>
+                    <span class="text-lg text-[var(--color-muted)] line-through">₹{{ number_format($product->price, 2) }}</span>
                     <span class="bg-red-100 text-red-700 text-xs font-bold px-2.5 py-1 rounded-full">-{{ $product->discount_percent }}% OFF</span>
                 @else
-                    <span class="text-2xl font-bold text-[var(--color-dark)]">${{ number_format($product->price, 2) }}</span>
+                    <span class="text-2xl font-bold text-[var(--color-dark)]">₹{{ number_format($product->price, 2) }}</span>
                 @endif
             </div>
 
@@ -74,20 +74,20 @@
 
                 {{-- Size Selection --}}
                 <div>
-                    <label class="block text-sm font-semibold text-[var(--color-dark)] mb-3">Size: <span class="font-normal text-[var(--color-muted)]" x-text="selectedSize"></span></label>
+                    <label class="block text-sm font-semibold text-[var(--color-dark)] mb-3">Size: <span class="font-normal text-[var(--color-muted)]" x-text="selectedSize || 'Select a size'"></span></label>
                     <div class="flex flex-wrap gap-2">
-                        @foreach(['XS','S','M','L','XL','XXL'] as $size)
-                            @php
-                                $variant = $product->variants->where('size', $size)->first();
-                                $inStock = $variant && $variant->stock > 0;
-                            @endphp
-                            <button type="button" @click="{{ $inStock ? "selectSize('$size')" : '' }}"
-                                class="size-option w-14 h-10 flex items-center justify-center text-sm font-medium border border-[var(--color-border)] rounded-lg {{ !$inStock ? 'out-of-stock' : '' }}"
-                                :class="selectedSize === '{{ $size }}' ? 'selected' : ''"
-                                {{ !$inStock ? 'disabled' : '' }}>
-                                {{ $size }}
+                        <template x-for="size in ['XS', 'S', 'M', 'L', 'XL', 'XXL']" :key="size">
+                            <button type="button" 
+                                @click="isSizeInStock(size) ? selectSize(size) : null"
+                                :class="{
+                                    'selected': selectedSize === size,
+                                    'out-of-stock': !isSizeInStock(size)
+                                }"
+                                class="size-option w-14 h-10 flex items-center justify-center text-sm font-medium border border-[var(--color-border)] rounded-lg"
+                                :disabled="!isSizeInStock(size)"
+                                x-text="size">
                             </button>
-                        @endforeach
+                        </template>
                     </div>
                 </div>
 
@@ -189,15 +189,33 @@
 <script>
 function productPage() {
     const variants = @json($product->variants);
+    const availableColors = @json($product->available_colors);
+    
+    // Find initial available variant
+    const firstInStock = variants.find(v => v.stock > 0) || variants[0];
+    const initialColor = firstInStock ? firstInStock.color : (availableColors[0] || '');
+    const initialSize = firstInStock ? firstInStock.size : '';
+    const initialVariantId = firstInStock ? firstInStock.id : null;
+    const initialStock = firstInStock ? firstInStock.stock : 0;
+
     return {
         mainImage: '{{ $product->image_url }}',
-        selectedColor: '{{ $product->available_colors[0] ?? '' }}',
-        selectedSize: '',
-        selectedVariantId: null,
-        currentStock: 0,
+        selectedColor: initialColor,
+        selectedSize: initialSize,
+        selectedVariantId: initialVariantId,
+        currentStock: initialStock,
         quantity: 1,
+        isSizeInStock(size) {
+            return variants.some(v => v.color === this.selectedColor && v.size === size && v.stock > 0);
+        },
         selectColor(color) {
             this.selectedColor = color;
+            if (!this.isSizeInStock(this.selectedSize)) {
+                const availableForColor = variants.find(v => v.color === color && v.stock > 0);
+                if (availableForColor) {
+                    this.selectedSize = availableForColor.size;
+                }
+            }
             this.updateVariant();
         },
         selectSize(size) {

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Admin — Shirt Store')</title>
+    <title>@yield('title', 'Admin — Jacario')</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -70,7 +70,7 @@
     </style>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
-<body class="min-h-screen bg-[var(--color-surface)]" x-data="{ sidebarOpen: false }">
+<body class="bg-[var(--color-surface-alt)] font-sans antialiased text-[var(--color-dark)]" x-data="{ sidebarOpen: false }">
     {{-- Toast Notifications --}}
     @if(session('success'))
         <div data-toast class="fixed top-4 right-4 z-[100] bg-green-50 border border-green-200 text-green-800 px-5 py-3 rounded-lg shadow-lg flex items-center gap-3 toast max-w-md">
@@ -89,10 +89,11 @@
         {{-- Sidebar --}}
         <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-[var(--color-border)] transform transition-transform lg:translate-x-0 lg:static lg:inset-auto"
             :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
-            <div class="flex items-center gap-2 h-16 px-6 border-b border-[var(--color-border)]">
-                <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2">
-                    <span class="font-serif text-lg font-bold text-[var(--color-dark)]">SHIRT</span>
-                    <span class="font-serif text-lg font-light text-[var(--color-brand-500)]">ADMIN</span>
+            <div class="flex items-center gap-2.5 h-16 px-6 border-b border-[var(--color-border)]">
+                <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2.5">
+                    <img src="{{ asset('images/urbancoff-logo.png') }}" alt="URBANCOFF" class="h-8 w-8 object-contain rounded-lg">
+                    <span class="font-sans text-base font-extrabold tracking-tight text-[var(--color-dark)]">URBANCOFF</span>
+                    <span class="text-[10px] font-bold uppercase tracking-wider bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded">Admin</span>
                 </a>
             </div>
             <nav class="p-4 space-y-1">

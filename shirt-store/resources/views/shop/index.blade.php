@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Shop All Shirts — Shirt Store')
+@section('title', 'Shop All Shirts — URBANCOFF')
 @section('meta_description', 'Browse our complete collection of premium shirts. Filter by category, size, color, and price.')
 
 @section('content')

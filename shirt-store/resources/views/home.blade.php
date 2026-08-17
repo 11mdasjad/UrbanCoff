@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Shirt Store — Premium Shirts Crafted for Style')
+@section('title', 'URBANCOFF — Premium Shirts Crafted for Style')
 @section('meta_description', 'Discover premium shirts crafted for confidence, comfort and everyday style. Shop formal, casual, party wear, denim, printed and linen shirts.')
 
 @section('content')

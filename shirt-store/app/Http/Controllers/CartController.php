@@ -34,7 +34,7 @@ class CartController extends Controller
                 $request->quantity
             );
 
-            return back()->with('success', 'Item added to cart!');
+            return back()->with('success', 'Item added to cart!')->with('open_cart', true);
         } catch (\Exception $e) {
             return back()->with('error', $e->getMessage());
         }
@@ -48,7 +48,7 @@ class CartController extends Controller
 
         try {
             $this->cartService->update($cartItem, $request->quantity);
-            return back()->with('success', 'Cart updated.');
+            return back()->with('success', 'Cart updated.')->with('open_cart', true);
         } catch (\Exception $e) {
             return back()->with('error', $e->getMessage());
         }
@@ -57,7 +57,7 @@ class CartController extends Controller
     public function remove(CartItem $cartItem)
     {
         $this->cartService->remove($cartItem);
-        return back()->with('success', 'Item removed from cart.');
+        return back()->with('success', 'Item removed from cart.')->with('open_cart', true);
     }
 
     public function clear()

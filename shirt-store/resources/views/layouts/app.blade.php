@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Shirt Store — Premium Shirts')</title>
+    <title>@yield('title', 'URBANCOFF — Premium Shirts')</title>
     <meta name="description" content="@yield('meta_description', 'Premium shirts crafted for confidence, comfort and everyday style. Shop formal, casual, party wear and more.')">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -84,10 +84,11 @@
         .color-swatch.selected { border-color: var(--color-dark); box-shadow: 0 0 0 2px white, 0 0 0 4px var(--color-dark); }
         .admin-sidebar-link { transition: all 0.2s ease; }
         .admin-sidebar-link:hover, .admin-sidebar-link.active { background-color: rgba(201, 169, 110, 0.1); color: var(--color-brand-600); }
+        [x-cloak] { display: none !important; }
     </style>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
-<body class="min-h-screen flex flex-col bg-[var(--color-surface)]">
+<body class="min-h-screen flex flex-col bg-[var(--color-surface)]" x-data="{ mobileMenu: false, searchOpen: false, cartDrawer: {{ session('open_cart') ? 'true' : 'false' }} }">
     {{-- Toast Notifications --}}
     @if(session('success'))
         <div data-toast class="fixed top-4 right-4 z-[100] bg-green-50 border border-green-200 text-green-800 px-5 py-3 rounded-lg shadow-lg flex items-center gap-3 toast max-w-md">
@@ -103,13 +104,13 @@
     @endif
 
     {{-- Navbar --}}
-    <nav class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-[var(--color-border)]" x-data="{ mobileMenu: false, searchOpen: false }">
+    <nav class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-[var(--color-border)]">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16 lg:h-20">
                 {{-- Logo --}}
-                <a href="{{ route('home') }}" class="flex items-center gap-2">
-                    <span class="font-serif text-xl lg:text-2xl font-bold tracking-tight text-[var(--color-dark)]">SHIRT</span>
-                    <span class="font-serif text-xl lg:text-2xl font-light tracking-tight text-[var(--color-brand-500)]">STORE</span>
+                <a href="{{ route('home') }}" class="flex items-center gap-3 group">
+                    <img src="{{ asset('images/urbancoff-logo.png') }}" alt="URBANCOFF" class="h-9 w-9 object-contain rounded-lg shadow-sm">
+                    <span class="font-sans text-xl lg:text-2xl font-extrabold tracking-tight text-[var(--color-dark)] group-hover:text-[var(--color-brand-600)] transition-colors">URBANCOFF</span>
                 </a>
 
                 {{-- Desktop Navigation --}}
@@ -155,13 +156,13 @@
                         </div>
                     </div>
 
-                    {{-- Cart --}}
-                    <a href="{{ route('cart.index') }}" class="relative p-2 text-[var(--color-muted)] hover:text-[var(--color-dark)] transition-colors">
+                    {{-- Cart Button --}}
+                    <button @click="cartDrawer = true" type="button" class="relative p-2 text-[var(--color-muted)] hover:text-[var(--color-dark)] transition-colors" aria-label="Open Shopping Cart">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
                         @if($cartCount > 0)
                             <span class="absolute -top-1 -right-1 bg-[var(--color-brand-500)] text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full">{{ $cartCount }}</span>
                         @endif
-                    </a>
+                    </button>
 
                     {{-- Mobile Menu Toggle --}}
                     <button @click="mobileMenu = !mobileMenu" class="lg:hidden p-2 text-[var(--color-muted)] hover:text-[var(--color-dark)]">
@@ -199,15 +200,159 @@
         @yield('content')
     </main>
 
+    {{-- Cart Slide-over Drawer --}}
+    <div x-cloak x-show="cartDrawer" class="relative z-[100]" aria-labelledby="slide-over-title" role="dialog" aria-modal="true">
+        {{-- Backdrop --}}
+        <div x-show="cartDrawer" 
+             x-transition:enter="ease-in-out duration-300"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="ease-in-out duration-300"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             @click="cartDrawer = false" 
+             class="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity"></div>
+
+        <div class="fixed inset-0 overflow-hidden">
+            <div class="absolute inset-0 overflow-hidden">
+                <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
+                    <div x-show="cartDrawer" 
+                         x-transition:enter="transform transition ease-in-out duration-300 sm:duration-500"
+                         x-transition:enter-start="translate-x-full"
+                         x-transition:enter-end="translate-x-0"
+                         x-transition:leave="transform transition ease-in-out duration-300 sm:duration-500"
+                         x-transition:leave-start="translate-x-0"
+                         x-transition:leave-end="translate-x-full"
+                         class="pointer-events-auto w-screen max-w-md bg-white shadow-2xl flex flex-col">
+                        
+                        {{-- Drawer Header --}}
+                        <div class="px-6 py-5 border-b border-[var(--color-border)] flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <svg class="w-5 h-5 text-[var(--color-brand-500)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                                <h2 class="font-serif text-lg font-bold text-[var(--color-dark)]">Shopping Bag ({{ $cartCount }})</h2>
+                            </div>
+                            <button @click="cartDrawer = false" type="button" class="p-2 text-[var(--color-muted)] hover:text-[var(--color-dark)] rounded-lg hover:bg-[var(--color-surface-alt)] transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                            </button>
+                        </div>
+
+                        {{-- Free shipping progress bar --}}
+                        @if(isset($cartDrawerSubtotal) && $cartDrawerSubtotal > 0)
+                            <div class="px-6 py-3 bg-[var(--color-surface-alt)] border-b border-[var(--color-border)]">
+                                @if($cartDrawerFreeShipping)
+                                    <div class="flex items-center gap-2 text-xs font-semibold text-green-700">
+                                        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                        <span>Congratulations! You qualify for <strong>FREE Delivery</strong></span>
+                                    </div>
+                                @else
+                                    <div class="flex items-center justify-between text-xs text-[var(--color-muted)] mb-1.5">
+                                        <span>Add <strong class="text-[var(--color-dark)]">₹{{ number_format(999 - $cartDrawerSubtotal, 2) }}</strong> more for FREE delivery</span>
+                                        <span class="font-semibold text-[var(--color-dark)]">{{ min(100, round(($cartDrawerSubtotal / 999) * 100)) }}%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-1.5 overflow-hidden">
+                                        <div class="bg-[var(--color-brand-500)] h-1.5 rounded-full transition-all duration-300" style="width: {{ min(100, ($cartDrawerSubtotal / 999) * 100) }}%"></div>
+                                    </div>
+                                @endif
+                            </div>
+                        @endif
+
+                        {{-- Drawer Body --}}
+                        <div class="flex-1 overflow-y-auto p-6 space-y-4">
+                            @if(isset($cartDrawerItems) && $cartDrawerItems->count() > 0)
+                                @foreach($cartDrawerItems as $item)
+                                    <div class="flex gap-4 p-3 rounded-xl border border-[var(--color-border)] bg-white hover:border-[var(--color-brand-300)] transition-colors">
+                                        <a href="{{ route('products.show', $item->product->slug) }}" class="w-20 h-24 rounded-lg overflow-hidden bg-[var(--color-surface-alt)] shrink-0">
+                                            <img src="{{ $item->product->image_url }}" alt="{{ $item->product->name }}" class="w-full h-full object-cover">
+                                        </a>
+                                        <div class="flex-1 min-w-0 flex flex-col justify-between">
+                                            <div>
+                                                <div class="flex items-start justify-between gap-2">
+                                                    <h3 class="font-sans text-xs font-semibold text-[var(--color-dark)] truncate">
+                                                        <a href="{{ route('products.show', $item->product->slug) }}" class="hover:text-[var(--color-brand-500)]">{{ $item->product->name }}</a>
+                                                    </h3>
+                                                    <form action="{{ route('cart.remove', $item) }}" method="POST">
+                                                        @csrf @method('DELETE')
+                                                        <button type="submit" class="text-[var(--color-muted)] hover:text-red-500 p-0.5 transition-colors" title="Remove item">
+                                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                                <p class="text-[11px] text-[var(--color-muted)] mt-0.5">{{ $item->variant->size }} · {{ $item->variant->color }}</p>
+                                                <p class="text-xs font-bold text-[var(--color-dark)] mt-1">₹{{ number_format($item->product->effective_price, 2) }}</p>
+                                            </div>
+
+                                            <div class="flex items-center justify-between mt-2 pt-2 border-t border-[var(--color-border)]">
+                                                <div class="flex items-center border border-[var(--color-border)] rounded-md">
+                                                    <form action="{{ route('cart.update', $item) }}" method="POST" class="inline">
+                                                        @csrf @method('PATCH')
+                                                        <input type="hidden" name="quantity" value="{{ max(1, $item->quantity - 1) }}">
+                                                        <button type="submit" class="px-2 py-0.5 text-xs text-[var(--color-muted)] hover:text-[var(--color-dark)]">−</button>
+                                                    </form>
+                                                    <span class="px-2 py-0.5 text-xs font-medium border-x border-[var(--color-border)]">{{ $item->quantity }}</span>
+                                                    <form action="{{ route('cart.update', $item) }}" method="POST" class="inline">
+                                                        @csrf @method('PATCH')
+                                                        <input type="hidden" name="quantity" value="{{ min($item->variant->stock, $item->quantity + 1) }}">
+                                                        <button type="submit" class="px-2 py-0.5 text-xs text-[var(--color-muted)] hover:text-[var(--color-dark)]">+</button>
+                                                    </form>
+                                                </div>
+                                                <p class="text-xs font-bold text-[var(--color-dark)]">₹{{ number_format($item->subtotal, 2) }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @else
+                                <div class="py-16 text-center">
+                                    <svg class="w-16 h-16 mx-auto text-[var(--color-border)] mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                                    <p class="font-serif text-lg font-bold text-[var(--color-dark)] mb-1">Your bag is empty</p>
+                                    <p class="text-xs text-[var(--color-muted)] mb-6">Discover our newest luxury shirt arrivals</p>
+                                    <a href="{{ route('shop') }}" @click="cartDrawer = false" class="inline-flex px-6 py-2.5 bg-[var(--color-dark)] text-white text-xs font-semibold rounded-lg hover:bg-[var(--color-dark-light)] transition-colors">
+                                        Shop All Shirts
+                                    </a>
+                                </div>
+                            @endif
+                        </div>
+
+                        {{-- Drawer Footer --}}
+                        @if(isset($cartDrawerItems) && $cartDrawerItems->count() > 0)
+                            <div class="p-6 border-t border-[var(--color-border)] bg-[var(--color-surface)] space-y-3">
+                                <div class="flex justify-between text-xs text-[var(--color-muted)]">
+                                    <span>Subtotal</span>
+                                    <span class="font-medium text-[var(--color-dark)]">₹{{ number_format($cartDrawerSubtotal, 2) }}</span>
+                                </div>
+                                <div class="flex justify-between text-xs text-[var(--color-muted)]">
+                                    <span>Shipping</span>
+                                    <span class="font-medium text-[var(--color-dark)]">{{ $cartDrawerFreeShipping ? 'Free' : '₹' . number_format($cartDrawerShipping, 2) }}</span>
+                                </div>
+                                <div class="flex justify-between text-sm font-bold text-[var(--color-dark)] pt-2 border-t border-[var(--color-border)]">
+                                    <span>Estimated Total</span>
+                                    <span>₹{{ number_format($cartDrawerTotal, 2) }}</span>
+                                </div>
+
+                                <div class="space-y-2 pt-2">
+                                    <a href="{{ route('checkout.index') }}" class="block w-full py-3 bg-[var(--color-dark)] text-white text-center text-xs font-semibold uppercase tracking-wider rounded-lg hover:bg-[var(--color-dark-light)] transition-colors shadow-sm">
+                                        Proceed to Checkout
+                                    </a>
+                                    <a href="{{ route('cart.index') }}" class="block w-full py-2.5 bg-white border border-[var(--color-border)] text-center text-xs font-semibold text-[var(--color-dark)] rounded-lg hover:bg-[var(--color-surface-alt)] transition-colors">
+                                        View Full Cart Page
+                                    </a>
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     {{-- Footer --}}
     <footer class="bg-[var(--color-dark)] text-white mt-auto">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
                 {{-- Brand --}}
                 <div>
-                    <div class="flex items-center gap-2 mb-4">
-                        <span class="font-serif text-xl font-bold">SHIRT</span>
-                        <span class="font-serif text-xl font-light text-[var(--color-brand-400)]">STORE</span>
+                    <div class="flex items-center gap-3 mb-4">
+                        <img src="{{ asset('images/urbancoff-logo.png') }}" alt="URBANCOFF" class="h-10 w-10 object-contain rounded-lg border border-gray-800">
+                        <span class="font-sans text-xl font-extrabold tracking-tight text-white">URBANCOFF</span>
                     </div>
                     <p class="text-sm text-gray-400 leading-relaxed">Premium shirts crafted for confidence, comfort and everyday style. Every shirt tells a story of quality and elegance.</p>
                 </div>
@@ -251,7 +396,7 @@
             </div>
 
             <div class="mt-12 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <p class="text-xs text-gray-500">&copy; {{ date('Y') }} Shirt Store. All rights reserved.</p>
+                <p class="text-xs text-gray-500">&copy; {{ date('Y') }} URBANCOFF. All rights reserved.</p>
                 <div class="flex items-center gap-6">
                     <span class="text-xs text-gray-500">Premium Quality</span>
                     <span class="text-xs text-gray-500">•</span>
